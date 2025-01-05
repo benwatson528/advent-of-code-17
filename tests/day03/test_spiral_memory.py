@@ -1,12 +1,19 @@
-from main.day03.spiral_memory import solve
+import pytest
+
+from main.day03.spiral_memory import solve_p1, solve_p2
 
 
 def test_p1_simple():
-    assert solve(1) == 0
-    assert solve(12) == 3
-    assert solve(23) == 2
-    assert solve(1024) == 31
+    assert solve_p1(1) == 0
+    assert solve_p1(12) == 3
+    assert solve_p1(23) == 2
+    assert solve_p1(1024) == 31
 
 
 def test_p1_real():
-    assert solve(361527) == 326
+    assert solve_p1(361527) == 326
+
+
+@pytest.mark.skip("Not running yet")
+def test_p2_real():
+    assert solve_p2(361527) == 5
