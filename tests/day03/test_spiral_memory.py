@@ -1,5 +1,3 @@
-import pytest
-
 from main.day03.spiral_memory import solve_p1, solve_p2
 
 
@@ -14,6 +12,5 @@ def test_p1_real():
     assert solve_p1(361527) == 326
 
 
-@pytest.mark.skip("Not running yet")
 def test_p2_real():
-    assert solve_p2(361527) == 5
+    assert solve_p2(361527) == 363010

@@ -1,7 +1,9 @@
 DIRECTIONS = {">": "^", "^": "<", "<": "v", "v": ">"}
 MOVEMENTS = {">": (1, 0), "^": (0, -1), "<": (-1, 0), "v": (0, 1)}
+SURROUNDING = [(1, 0), (-1, 0), (1, 1), (0, 1), (0, -1), (-1, -1), (1, -1), (-1, 1)]
 
 
+# each square's corner is m^n+2
 def solve_p1(x) -> int:
     if x == 1:
         return 0
@@ -24,21 +26,27 @@ def solve_p1(x) -> int:
 
 
 def solve_p2(n) -> int:
-    grid = {}
-    square_val = 1
-    grid[(0, 0)] = square_val
-    direction = ">"
-    x = 1
-    y = 0
-    square_size = 1
-    while square_val < n:
-        grid[(x, y)] = sum(grid.get(move(x, y, *a), 0) for a in [(1, 0), (-1, 0), (0, 1), (0, -1)])
-
-        if direction == ">":
-            if move(x, y, *MOVEMENTS[direction])[0] > square_size:
+    grid = {(0, 0): 1, (1, 0): 1}
+    direction = "^"
+    current = (1, 0)
+    dist_from_centre = 1
+    turn_next = False
+    while grid[current] < n:
+        next_position = move(*current, *MOVEMENTS[direction])
+        if abs(next_position[0]) - dist_from_centre > 0 or abs(next_position[1]) - dist_from_centre > 0:
+            if direction == ">" and not turn_next:
+                dist_from_centre += 1  # keep moving right one more spot if we're at the corner of the square
+                turn_next = True
+            else:
                 direction = DIRECTIONS[direction]
+                turn_next = False
+            next_position = move(*current, *MOVEMENTS[direction])
 
-    return square_val
+        grid[next_position] = sum(grid.get(move(*next_position, *adjacent), 0) for adjacent in SURROUNDING)
+        current = next_position
+    return grid[current]
 
 
 move = lambda x1, y1, x2, y2: (x1 + x2, y1 + y2)
+
+manhattan = lambda x1, y1, x2, y2: abs(x1 - x2) + abs(y1 - y2)
